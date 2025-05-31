@@ -18,6 +18,9 @@ def weighted_calc(path):
     fft_vals = np.fft.fft(linear_amplitude)
     freqs = np.fft.fftfreq(N, d=dt)
 
+    # Frequency denominations
+    # print(np.mean(np.diff(freqs)))
+
     fft_offset = 50
 
     positive_freqs = freqs[fft_offset:N // 2]
@@ -30,5 +33,30 @@ for idx in range(0, 55, 5):
 for idx in range(50, 110, 10):
     print(f"{idx}-100 B:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\{idx}-100\Hybrid {idx}-100 B Strum.csv"))
 
+print()
+
+for idx in range(0, 55, 5):
+    print(f"{idx}-100 N:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\{idx}-100\Hybrid {idx}-100 N Strum.csv"))
+
+for idx in range(50, 110, 10):
+    print(f"{idx}-100 N:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\{idx}-100\Hybrid {idx}-100 N Strum.csv"))
+
+print()
+
+for idx in range(0, 55, 5):
+    print(f"{idx}-100 N:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid {idx}-100 Noise.csv"))
+
+for idx in range(50, 110, 10):
+    print(f"{idx}-100 N:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid {idx}-100 Noise.csv"))
+
+print()
+
+# for idx in range(0, 55, 5):
+#     print(f"{idx}-100 B:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid {idx}-100 Noise.csv"))
+
+# for idx in range(50, 110, 10):
+#     print(f"{idx}-100 B:", weighted_calc(F"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid {idx}-100 Noise.csv"))
+
+print()
 
 plt.show()

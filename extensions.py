@@ -21,5 +21,5 @@ def change_extensions_to_csv(directory):
         print(f"Renamed: {filename} → {new_filename}")
 
 # Example usage
-directory_path = r"Audacity-Data\Hybrid-Humbucker\100-100"
+directory_path = r"Audacity-Data\Hybrid-Humbucker\Noise"
 change_extensions_to_csv(directory_path)
