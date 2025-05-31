@@ -16,7 +16,11 @@ def compute_snr(signal, noise):
         float: SNR in dB
     """
     signal_power = np.mean(signal**2)
+    print("Average Signal Power", signal_power)
+
     noise_power = np.mean(noise**2)
+    print("Average Noise Power", noise_power)
+
     snr_db = 10 * np.log10(signal_power / noise_power)
     return snr_db
 
@@ -90,14 +94,14 @@ for idx, file in enumerate(dir_files):
     plot_txt(fig, axs, f'{directory}\{file}', index=idx)
 
 compute_snr_from_files(
-    r"Audacity-Data\Hybrid-Humbucker\5-100\Hybrid 5-100 N Strum.csv", 
-    r"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid 0-100 Noise.csv"
+    r"Audacity-Data\Hybrid-Humbucker\30-100\Hybrid 30-100 N Strum.csv", 
+    r"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid 30-100 Noise.csv"
 )
 
-compute_snr_from_files(
-    r"Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv", 
-    r"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid 10-100 Noise.csv"
-)
+# compute_snr_from_files(
+#     r"Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv", 
+#     r"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid 10-100 Noise.csv"
+# )
 
 # plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 B Strum.csv', index=0)
 # plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv', index=1)
