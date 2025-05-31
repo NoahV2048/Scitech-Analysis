@@ -20,6 +20,13 @@ def compute_snr(signal, noise):
     snr_db = 10 * np.log10(signal_power / noise_power)
     return snr_db
 
+def compute_snr_from_files(signalfile, noisefile):
+    signal_df = pd.read_csv(signalfile, delimiter="\t", header=None)
+    filtered_signal_df = np.array(signal_df[signal_df[1] != '[-inf]'], dtype=float)
+    noise_df = pd.read_csv(noisefile, delimiter="\t", header=None)
+    filtered_noise_df = np.array(noise_df[noise_df[0] != '[-inf]'], dtype=float)
+
+    print(compute_snr(10 ** (filtered_signal_df[1] / 20.0), 10 ** (filtered_noise_df[1] / 20.0)))
 
 def get_harmonic_peaks(freqs, magnitudes, num_peaks=5, min_prominence=0.01):
     peaks, properties = find_peaks(magnitudes, prominence=min_prominence)
@@ -31,7 +38,7 @@ def get_harmonic_peaks(freqs, magnitudes, num_peaks=5, min_prominence=0.01):
 def get_df(path):
     df = pd.read_csv(path, delimiter="\t", header=None)
     
-    filtered_df = df[df[0] != '[-inf]']
+    filtered_df = df[df[1] != '[-inf]']
     time = np.array(filtered_df[0], dtype=float)
     amplitude = np.array(filtered_df[1], dtype=float)
 
@@ -40,7 +47,7 @@ def get_df(path):
 def plot_txt(fig, axs, path, index):
     df = pd.read_csv(path, delimiter="\t", header=None)
     
-    filtered_df = df[df[0] != '[-inf]']
+    filtered_df = df[df[1] != '[-inf]']
     time = np.array(filtered_df[0], dtype=float)
     amplitude = np.array(filtered_df[1], dtype=float)
 
@@ -75,10 +82,25 @@ def plot_txt(fig, axs, path, index):
 directory = r"Audacity-Data\Hybrid-Humbucker\5-100"
 dir_files = os.listdir(directory)
 
-fig, axs = plt.subplots(len(dir_files), figsize=(12, 20), sharex=True)
+plots = len(dir_files)
+# plots = 2
+fig, axs = plt.subplots(plots, figsize=(12, 20), sharex=True)
 
 for idx, file in enumerate(dir_files):
     plot_txt(fig, axs, f'{directory}\{file}', index=idx)
+
+compute_snr_from_files(
+    r"Audacity-Data\Hybrid-Humbucker\5-100\Hybrid 5-100 N Strum.csv", 
+    r"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid 0-100 Noise.csv"
+)
+
+compute_snr_from_files(
+    r"Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv", 
+    r"Audacity-Data\Hybrid-Humbucker\Noise\Hybrid 10-100 Noise.csv"
+)
+
+# plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 B Strum.csv', index=0)
+# plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv', index=1)
 
 plt.tight_layout()
 plt.show()

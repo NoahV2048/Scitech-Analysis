@@ -37,4 +37,4 @@ def prepend_correct_time_column(directory, sample_rate=44100, duration_sec=2.0):
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
-prepend_correct_time_column(r"Audacity-Data\Hybrid-Humbucker\10-100", sample_rate=44100, duration_sec=2.0)
+prepend_correct_time_column(r"Audacity-Data\Hybrid-Humbucker\30-100", sample_rate=44100, duration_sec=2.0)
