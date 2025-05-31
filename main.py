@@ -28,10 +28,19 @@ def get_harmonic_peaks(freqs, magnitudes, num_peaks=5, min_prominence=0.01):
     return [(freqs[p], magnitudes[p]) for p in top_peaks]
 
 
+def get_df(path):
+    df = pd.read_csv(path, delimiter="\t", header=None)
+    
+    filtered_df = df[df[0] != '[-inf]']
+    time = np.array(filtered_df[0], dtype=float)
+    amplitude = np.array(filtered_df[1], dtype=float)
+
+    return time, amplitude, filtered_df
+
 def plot_txt(fig, axs, path, index):
     df = pd.read_csv(path, delimiter="\t", header=None)
     
-    filtered_df = df[df[1] != '[-inf]']
+    filtered_df = df[df[0] != '[-inf]']
     time = np.array(filtered_df[0], dtype=float)
     amplitude = np.array(filtered_df[1], dtype=float)
 
@@ -63,7 +72,7 @@ def plot_txt(fig, axs, path, index):
     axs[index].set_xscale('log')
 
 
-directory = r"Audacity-Data"
+directory = r"Audacity-Data\Hybrid-Humbucker\5-100"
 dir_files = os.listdir(directory)
 
 fig, axs = plt.subplots(len(dir_files), figsize=(12, 20), sharex=True)
