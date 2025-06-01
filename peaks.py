@@ -38,7 +38,6 @@ def get_harmonic_peaks(freqs, magnitudes, num_peaks=5, min_prominence=0.01):
     top_peaks = peaks[sorted_indices[:num_peaks]]
     return [(freqs[p], magnitudes[p]) for p in top_peaks]
 
-
 def get_df(path):
     df = pd.read_csv(path, delimiter="\t", header=None)
     
@@ -48,14 +47,12 @@ def get_df(path):
 
     return time, amplitude, filtered_df
 
-def plot_txt(fig, axs, path, index):
+def plot_txt(fig, axs, path: str, index, output="Output-Data"):
     df = pd.read_csv(path, delimiter="\t", header=None)
     
     filtered_df = df[df[1] != '[-inf]']
     time = np.array(filtered_df[0], dtype=float)
     amplitude = np.array(filtered_df[1], dtype=float)
-
-    # axs[index, 0].plot(time, amplitude)
 
     dt = np.mean(np.diff(time))
     fs = 1.0 / dt
@@ -73,14 +70,17 @@ def plot_txt(fig, axs, path, index):
 
     harmonic_peaks = get_harmonic_peaks(positive_freqs, positive_magnitudes, num_peaks=20, min_prominence=0.5)
 
-    axs[index].plot(positive_freqs, positive_magnitudes)
-    for freq, mag in harmonic_peaks:
-        axs[index].plot(freq, mag, 'ro')
-        axs[index].annotate(f"{freq:.1f} Hz", (freq, mag), textcoords="offset points", xytext=(0, 10), ha='center')
+    harmonic_peaks_sorted = sorted(harmonic_peaks, key=lambda x: x[0])  # Sort by frequency
 
-    # print(harmonic_peaks)
+    output_df = pd.DataFrame(columns=["Frequency (Hz)", "Magnitude"])
 
-    axs[index].set_xscale('log')
+    for idx, (freq, mag) in enumerate(harmonic_peaks_sorted):
+        output_df = output_df._append({
+            "Frequency (Hz)": freq,
+            "Magnitude": mag
+        }, ignore_index=True)
+
+    np.savetxt(f'{output}\{path.split('\\')[-1]}', output_df.to_numpy(), delimiter='\t')
 
 
 directory = r"Audacity-Data\Hybrid-Humbucker\5-100"
@@ -91,11 +91,11 @@ plots = len(dir_files)
 fig, axs = plt.subplots(plots, figsize=(12, 20), sharex=True)
 
 for idx, file in enumerate(dir_files):
-    plot_txt(fig, axs, f'{directory}\{file}', index=idx)
+    plot_txt(fig, axs, f'{directory}\{file}', index=idx, output="Output-Data"),
 
 
 # plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 B Strum.csv', index=0)
 # plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv', index=1)
 
-plt.tight_layout()
-plt.show()
+# plt.tight_layout()
+# plt.show()

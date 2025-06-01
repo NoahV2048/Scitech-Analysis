@@ -8,7 +8,7 @@ def prepend_correct_time_column(directory, sample_rate=44100):
     Time is sampled at `sample_rate` for `duration_sec` seconds and added as the first column.
     """
 
-    for filename in os.listdir(directory[:7]):
+    for filename in os.listdir(directory):
         if filename.endswith(".csv") or filename.endswith(".txt"):
             path = os.path.join(directory, filename)
 
@@ -34,4 +34,4 @@ def prepend_correct_time_column(directory, sample_rate=44100):
             except Exception as e:
                 print(f"Error processing {filename}: {e}")
 
-prepend_correct_time_column(r"Audacity-Data\Hybrid-Humbucker\Noise", sample_rate=44100, duration_sec=2.0)
+prepend_correct_time_column(r"Audacity-Data\Hybrid-Humbucker\Noise", sample_rate=44100)

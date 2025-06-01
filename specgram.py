@@ -4,34 +4,6 @@ import numpy as np
 import os
 from scipy.signal import find_peaks
 
-def compute_snr(signal, noise):
-    """
-    Computes SNR in decibels from two segments: signal and noise (in linear amplitude).
-
-    Args:
-        signal (np.ndarray): Signal segment (linear scale).
-        noise (np.ndarray): Noise segment (linear scale).
-
-    Returns:
-        float: SNR in dB
-    """
-    signal_power = np.mean(signal**2)
-    print("Average Signal Power", signal_power)
-
-    noise_power = np.mean(noise**2)
-    print("Average Noise Power", noise_power)
-
-    snr_db = 10 * np.log10(signal_power / noise_power)
-    return snr_db
-
-def compute_snr_from_files(signalfile, noisefile):
-    signal_df = pd.read_csv(signalfile, delimiter="\t", header=None)
-    filtered_signal_df = np.array(signal_df[signal_df[1] != '[-inf]'], dtype=float)
-    noise_df = pd.read_csv(noisefile, delimiter="\t", header=None)
-    filtered_noise_df = np.array(noise_df[noise_df[0] != '[-inf]'], dtype=float)
-
-    print(compute_snr(10 ** (filtered_signal_df[1] / 20.0), 10 ** (filtered_noise_df[1] / 20.0)))
-
 def get_harmonic_peaks(freqs, magnitudes, num_peaks=5, min_prominence=0.01):
     peaks, properties = find_peaks(magnitudes, prominence=min_prominence)
     sorted_indices = np.argsort(magnitudes[peaks])[::-1]
@@ -73,14 +45,8 @@ def plot_txt(fig, axs, path, index):
 
     harmonic_peaks = get_harmonic_peaks(positive_freqs, positive_magnitudes, num_peaks=20, min_prominence=0.5)
 
-    axs[index].plot(positive_freqs, positive_magnitudes)
-    for freq, mag in harmonic_peaks:
-        axs[index].plot(freq, mag, 'ro')
-        axs[index].annotate(f"{freq:.1f} Hz", (freq, mag), textcoords="offset points", xytext=(0, 10), ha='center')
-
-    # print(harmonic_peaks)
-
-    axs[index].set_xscale('log')
+    # axs[index].plot(time, linear_amplitude)
+    axs[index].specgram(linear_amplitude, NFFT=1024, Fs=fs)
 
 
 directory = r"Audacity-Data\Hybrid-Humbucker\5-100"
