@@ -48,7 +48,7 @@ def get_df(path):
 
     return time, amplitude, filtered_df
 
-def plot_txt(fig, axs, path, index):
+def plot_txt(fig, axs, path, r, c, label, coils=0):
     df = pd.read_csv(path, delimiter="\t", header=None)
     
     filtered_df = df[df[1] != '[-inf]']
@@ -69,33 +69,97 @@ def plot_txt(fig, axs, path, index):
     fft_offset = 50
 
     positive_freqs = freqs[fft_offset:N // 2]
-    positive_magnitudes = np.abs(fft_vals[fft_offset:N // 2])
+    positive_magnitudes = np.abs(fft_vals[fft_offset:N // 2])\
+    
+    
+    axs[r, c].clear()
 
-    harmonic_peaks = get_harmonic_peaks(positive_freqs, positive_magnitudes, num_peaks=20, min_prominence=0.5)
+    axs[r, c].plot(positive_freqs, positive_magnitudes)
 
-    axs[index].plot(positive_freqs, positive_magnitudes)
-    for freq, mag in harmonic_peaks:
-        axs[index].plot(freq, mag, 'ro')
-        axs[index].annotate(f"{freq:.1f} Hz", (freq, mag), textcoords="offset points", xytext=(0, 10), ha='center')
+    # harmonic_peaks = get_harmonic_peaks(positive_freqs, positive_magnitudes, num_peaks=20, min_prominence=0.5)
+
+    # axs[index].plot(positive_freqs, positive_magnitudes)
+    # for freq, mag in harmonic_peaks:
+    #     print(mag)
+    #     axs[index].plot(freq, mag, 'ro')
+    #     axs[index].annotate(f"{mag:.1f}", (freq, mag), textcoords="offset points", xytext=(0, 10), ha='center')
 
     # print(harmonic_peaks)
 
-    axs[index].set_xscale('log')
+
+    axs[r, c].set_xscale('log')
+
+    axs[r, c].set_xscale('log')
+    axs[r, c].set_ylabel(f'db ({label})')
+
+    # Only set x-axis label on bottom-most plot
+    if r == 3:
+        axs[r, c].set_xlabel('Frequency (Hz)')
+
+    # if index == 0:
+    #     axs[index].set_title(f"Coils={coils}")
 
 
-directory = r"Audacity-Data\Hybrid-Humbucker\5-100"
+directory = r"Audacity-Data\Hybrid-Humbucker\30-100"
 dir_files = os.listdir(directory)
 
-plots = len(dir_files)
-# plots = 2
-fig, axs = plt.subplots(plots, figsize=(12, 20), sharex=True)
+# plots = len(dir_files)
+plots = 6
+fig, axs = plt.subplots(3, 2, sharex=True)
 
-for idx, file in enumerate(dir_files):
-    plot_txt(fig, axs, f'{directory}\{file}', index=idx)
+# for idx, file in enumerate(dir_files):
+#     plot_txt(fig, axs, f'{directory}\{file}', index=idx)
 
+for coils in range(0, 50, 5):
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B E2.csv', r=0, c=0, label="E2", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B A2.csv', r=1, c=0, label="A2", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B D3.csv', r=2, c=0, label="D3", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B G3.csv', r=0, c=1, label="G3", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B B3.csv', r=1, c=1, label="B3", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B E4.csv', r=2, c=1, label="E4", coils=coils)
 
-# plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 B Strum.csv', index=0)
-# plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 N Strum.csv', index=1)
+    for ax in axs:
+        for killme in ax:
+            killme.set_ylim(0, 60)
 
-plt.tight_layout()
-plt.show()
+    fig.suptitle(f"coils={coils}")
+
+    plt.tight_layout(pad=1)
+
+    plt.savefig(fr"Output-Data\Images\{coils}-100")
+
+for coils in range(50, 110, 10):
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B E2.csv', r=0, c=0, label="E2", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B A2.csv', r=1, c=0, label="A2", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B D3.csv', r=2, c=0, label="D3", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B G3.csv', r=0, c=1, label="G3", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B B3.csv', r=1, c=1, label="B3", coils=coils)
+    plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B E4.csv', r=2, c=1, label="E4", coils=coils)
+
+    for ax in axs:
+        for killme in ax:
+            killme.set_ylim(0, 60)
+
+    fig.suptitle(f"coils={coils}")
+
+    plt.tight_layout(pad=1)
+
+    plt.savefig(fr"Output-Data\Images\{coils}-100")
+
+# coils = 5
+
+# plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B E2.csv', index=0, label="E2")
+# plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B A2.csv', index=1, label="A2")
+# plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B D3.csv', index=2, label="D3")
+# plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B G3.csv', index=3, label="G3")
+# plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B B3.csv', index=4, label="B3")
+# plot_txt(fig, axs, fr'Audacity-Data\Hybrid-Humbucker\{coils}-100\Hybrid {coils}-100 B E4.csv', index=5, label="E4")
+
+# for ax in axs:
+#     ax.set_ylim(0, 60)
+
+# plt.tight_layout(pad=10)
+
+# plt.savefig(fr"Output-Data\Images\{coils}-100")
+
+# plt.show()

@@ -18,7 +18,7 @@ def compute_snr(signal, noise):
     noise_power = np.sqrt(np.mean(noise ** 2))
     print("Average Noise Power", noise_power)
 
-    snr_db = 20 * np.log10(signal_power / noise_power)
+    snr_db = 10 * np.log10(signal_power / noise_power)
     return snr_db
 
 def compute_snr_from_files(signalfile, noisefile):
@@ -30,13 +30,13 @@ def compute_snr_from_files(signalfile, noisefile):
     return compute_snr(10 ** (filtered_signal_df[1] / 20.0), 10 ** (filtered_noise_df[1] / 20.0))
 
 def get_snr_linear(snr_db):
-    return 10 ** (snr_db / 20)
+    return snr_db
+    # return 10 ** (snr_db / 20)
 
-
-print(compute_snr_from_files(
+print(get_snr_linear(compute_snr_from_files(
     f"Audacity-Data\\Hybrid-Humbucker\\30-100\\Hybrid 30-100 N Strum.csv", 
     f"Audacity-Data\\Hybrid-Humbucker\\Noise\\Hybrid 30-100 Noise.csv"
-))
+)))
 
 exit(0)
 
@@ -48,7 +48,7 @@ for i in range(0, 50, 5):
 
 for i in range(50, 100, 10):
     print(get_snr_linear(compute_snr_from_files(
-        f"Audacity-Data\\Hybrid-Humbucker\\{i}-100\\Hybrid {i}-100 N Strum.csv", 
+        f"Audacity-Data\\Hybrid-Humbucker\\{i}-100\\Hybrid {i}-100 B Strum.csv", 
         f"Audacity-Data\\Hybrid-Humbucker\\Noise\\Hybrid {i}-100 Noise.csv"
     )))
 

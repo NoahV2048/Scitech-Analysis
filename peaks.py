@@ -79,11 +79,11 @@ def plot_txt(fig, axs, path: str, index, output="Output-Data"):
             "Frequency (Hz)": freq,
             "Magnitude": mag
         }, ignore_index=True)
+        print(mag)
 
     np.savetxt(f'{output}\{path.split('\\')[-1]}', output_df.to_numpy(), delimiter='\t')
 
-
-directory = r"Audacity-Data\Hybrid-Humbucker\5-100"
+directory = f"Audacity-Data\\Hybrid-Humbucker\\100-100"
 dir_files = os.listdir(directory)
 
 plots = len(dir_files)
@@ -91,7 +91,31 @@ plots = len(dir_files)
 fig, axs = plt.subplots(plots, figsize=(12, 20), sharex=True)
 
 for idx, file in enumerate(dir_files):
-    plot_txt(fig, axs, f'{directory}\{file}', index=idx, output="Output-Data"),
+    plot_txt(fig, axs, f'{directory}\{file}', index=idx, output="Output-Data")
+
+exit(0)
+
+for i in range(0, 50, 5):
+    directory = f"Audacity-Data\\Hybrid-Humbucker\\{i}-100"
+    dir_files = os.listdir(directory)
+
+    plots = len(dir_files)
+    # plots = 2
+    fig, axs = plt.subplots(plots, figsize=(12, 20), sharex=True)
+
+    for idx, file in enumerate(dir_files):
+        plot_txt(fig, axs, f'{directory}\{file}', index=idx, output="Output-Data")
+
+for i in range(50, 100, 10):
+    directory = f"Audacity-Data\\Hybrid-Humbucker\\{i}-100"
+    dir_files = os.listdir(directory)
+
+    plots = len(dir_files)
+    # plots = 2
+    fig, axs = plt.subplots(plots, figsize=(12, 20), sharex=True)
+
+    for idx, file in enumerate(dir_files):
+        plot_txt(fig, axs, f'{directory}\{file}', index=idx, output="Output-Data")
 
 
 # plot_txt(fig, axs, r'Audacity-Data\Hybrid-Humbucker\10-100\Hybrid 10-100 B Strum.csv', index=0)
