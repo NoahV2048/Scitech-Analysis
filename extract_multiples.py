@@ -22,9 +22,9 @@ def extract_multiples(input_file, output_file, num_multiples=10):
     output_df.to_csv(output_file, sep="\t", index=False)
 
 for i in range(0, 50, 5):
-    path = f'Hybrid {i}-100 B A2.csv'
+    path = f'Hybrid {i}-100 B Strum.csv'
     extract_multiples(f'Output-Data\{path}', f'Multiples_Data\{path}')
 
 for i in range(50, 100, 10):
-    path = f'Hybrid {i}-100 B A2.csv'
+    path = f'Hybrid {i}-100 B Strum.csv'
     extract_multiples(f'Output-Data\{path}', f'Multiples_Data\{path}')
